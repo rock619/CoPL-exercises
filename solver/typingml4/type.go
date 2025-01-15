@@ -140,7 +140,7 @@ func Unify(constraints []Constraint, subs Substitutions) error {
 				cs = append(cs, Constraint{r, l})
 			case *IntType:
 			default:
-				return fmt.Errorf("Unify: type mismatch: %v (int) != %v (%T)", l, right, right)
+				return fmt.Errorf("Unify: type mismatch: %v (%T) != %v (%T)", l, l, right, right)
 			}
 		case *BoolType:
 			switch r := right.(type) {
@@ -148,7 +148,7 @@ func Unify(constraints []Constraint, subs Substitutions) error {
 				cs = append(cs, Constraint{r, l})
 			case *BoolType:
 			default:
-				return fmt.Errorf("Unify: type mismatch: %v (bool) != %v (%T)", l, right, right)
+				return fmt.Errorf("Unify: type mismatch: %v (%T) != %v (%T)", l, l, right, right)
 			}
 		case *FunType:
 			switch r := right.(type) {
@@ -158,7 +158,7 @@ func Unify(constraints []Constraint, subs Substitutions) error {
 				cs = append(cs, Constraint{l.ParamType, r.ParamType})
 				cs = append(cs, Constraint{l.ReturnType, r.ReturnType})
 			default:
-				return fmt.Errorf("Unify: type mismatch: %v (fun) != %v (%T)", l, right, right)
+				return fmt.Errorf("Unify: type mismatch: %v (%T) != %v (%T)", l, l, right, right)
 			}
 		case *ListType:
 			switch r := right.(type) {
@@ -167,7 +167,7 @@ func Unify(constraints []Constraint, subs Substitutions) error {
 			case *ListType:
 				cs = append(cs, Constraint{l.ElemType, r.ElemType})
 			default:
-				return fmt.Errorf("Unify: type mismatch: %v (list) != %v (%T)", l, right, right)
+				return fmt.Errorf("Unify: type mismatch: %v (%T) != %v (%T)", l, l, right, right)
 			}
 		default:
 			return fmt.Errorf("Unify: Unknown type: %v", l)

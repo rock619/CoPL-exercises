@@ -71,8 +71,8 @@ func typingml4ParserInit() {
 		0, 0, 1, 26, 1, 1, 0, 0, 0, 27, 28, 6, 1, -1, 0, 28, 29, 5, 17, 0, 0, 29,
 		30, 3, 2, 1, 0, 30, 31, 5, 18, 0, 0, 31, 35, 1, 0, 0, 0, 32, 35, 5, 29,
 		0, 0, 33, 35, 5, 30, 0, 0, 34, 27, 1, 0, 0, 0, 34, 32, 1, 0, 0, 0, 34,
-		33, 1, 0, 0, 0, 35, 43, 1, 0, 0, 0, 36, 37, 10, 2, 0, 0, 37, 38, 5, 24,
-		0, 0, 38, 42, 3, 2, 1, 2, 39, 40, 10, 1, 0, 0, 40, 42, 5, 31, 0, 0, 41,
+		33, 1, 0, 0, 0, 35, 43, 1, 0, 0, 0, 36, 37, 10, 1, 0, 0, 37, 38, 5, 24,
+		0, 0, 38, 42, 3, 2, 1, 1, 39, 40, 10, 2, 0, 0, 40, 42, 5, 31, 0, 0, 41,
 		36, 1, 0, 0, 0, 41, 39, 1, 0, 0, 0, 42, 45, 1, 0, 0, 0, 43, 41, 1, 0, 0,
 		0, 43, 44, 1, 0, 0, 0, 44, 3, 1, 0, 0, 0, 45, 43, 1, 0, 0, 0, 46, 47, 6,
 		2, -1, 0, 47, 48, 5, 17, 0, 0, 48, 49, 3, 4, 2, 0, 49, 50, 5, 18, 0, 0,
@@ -875,8 +875,8 @@ func (p *TypingML4Parser) type_(_p int) (localctx ITypeContext) {
 				p.PushNewRecursionContext(localctx, _startState, TypingML4ParserRULE_type)
 				p.SetState(36)
 
-				if !(p.Precpred(p.GetParserRuleContext(), 2)) {
-					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 2)", ""))
+				if !(p.Precpred(p.GetParserRuleContext(), 1)) {
+					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 1)", ""))
 					goto errorExit
 				}
 				{
@@ -890,7 +890,7 @@ func (p *TypingML4Parser) type_(_p int) (localctx ITypeContext) {
 				{
 					p.SetState(38)
 
-					var _x = p.type_(2)
+					var _x = p.type_(1)
 
 					localctx.(*FunTypeContext).returnType = _x
 				}
@@ -902,8 +902,8 @@ func (p *TypingML4Parser) type_(_p int) (localctx ITypeContext) {
 				p.PushNewRecursionContext(localctx, _startState, TypingML4ParserRULE_type)
 				p.SetState(39)
 
-				if !(p.Precpred(p.GetParserRuleContext(), 1)) {
-					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 1)", ""))
+				if !(p.Precpred(p.GetParserRuleContext(), 2)) {
+					p.SetError(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 2)", ""))
 					goto errorExit
 				}
 				{
@@ -3502,10 +3502,10 @@ func (p *TypingML4Parser) Sempred(localctx antlr.RuleContext, ruleIndex, predInd
 func (p *TypingML4Parser) Type__Sempred(localctx antlr.RuleContext, predIndex int) bool {
 	switch predIndex {
 	case 0:
-		return p.Precpred(p.GetParserRuleContext(), 2)
+		return p.Precpred(p.GetParserRuleContext(), 1)
 
 	case 1:
-		return p.Precpred(p.GetParserRuleContext(), 1)
+		return p.Precpred(p.GetParserRuleContext(), 2)
 
 	default:
 		panic("No predicate with index: " + fmt.Sprint(predIndex))

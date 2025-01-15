@@ -248,8 +248,54 @@ func (v *Visitor) VisitAppExpr(c *parser.AppExprContext) interface{} {
 func (v *Visitor) VisitMatchExpr(c *parser.MatchExprContext) interface{} {
 	v.logExprContext(c)
 
-	v.l.Error("VisitMatchExpr: not implemented", "literal", getLiteral(v.p, c))
-	return nil
+	expr := MatchExpr{
+		BaseExpr: &BaseExpr{
+			env:     v.env.Clone(),
+			literal: getLiteral(v.p, c),
+			typ:     v.env.NewTypeVar(),
+		},
+		HeadVar: c.ConsPattern().GetHeadVar().GetText(),
+		TailVar: c.ConsPattern().GetTailVar().GetText(),
+	}
+
+	listType := &ListType{ElemType: v.env.NewTypeVar()}
+	v.l.Info("VisitMatchExpr: add TypeVar of list", "typeVar", listType)
+	reset := v.setType(listType)
+	matched, ok := c.Expr().Accept(v).(Expr)
+	if !ok {
+		v.l.Error("VisitMatchExpr: matched is not Expr", "literal", getLiteral(v.p, c.Expr()))
+		return nil
+	}
+	reset()
+	v.l.Info("VisitMatchExpr: AddConstraint", "left", listType, "right", matched.Type())
+	v.env.AddConstraint(listType, matched.Type())
+	expr.Matched = matched
+
+	empty, ok := c.EmptyPattern().Expr().Accept(v).(Expr)
+	if !ok {
+		v.l.Error("VisitMatchExpr: empty is not Expr", "literal", getLiteral(v.p, c.EmptyPattern().Expr()))
+		return nil
+	}
+	v.l.Info("VisitMatchExpr: AddConstraint", "left", listType, "right", empty.Type())
+	v.env.AddConstraint(expr.typ, empty.Type())
+	expr.Empty = empty
+
+	v.env.AddScope()
+	defer v.env.RemoveScope()
+	v.env.AddBind(expr.HeadVar, listType.ElemType)
+	v.env.AddBind(expr.TailVar, listType)
+	cons, ok := c.ConsPattern().Expr().Accept(v).(Expr)
+	if !ok {
+		v.l.Error("VisitMatchExpr: cons is not Expr", "literal", getLiteral(v.p, c.ConsPattern().Expr()))
+		return nil
+	}
+	v.l.Info("VisitMatchExpr: AddConstraint", "left", listType, "right", cons.Type())
+	v.env.AddConstraint(expr.typ, cons.Type())
+	expr.Cons = cons
+
+	expr.rule = TMatch
+	expr.AddChildren(matched, empty, cons)
+	return expr
 }
 
 func (v *Visitor) VisitEmptyListExpr(c *parser.EmptyListExprContext) interface{} {

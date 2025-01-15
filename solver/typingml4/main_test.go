@@ -30,7 +30,7 @@ func readQuestion(t *testing.T, number int) string {
 }
 
 func TestRun(t *testing.T) {
-	for i := 80; i <= 101; i++ {
+	for i := 80; i <= 106; i++ {
 		t.Run(fmt.Sprintf("Q%d", i), func(t *testing.T) {
 			w := &bytes.Buffer{}
 			errW := &bytes.Buffer{}

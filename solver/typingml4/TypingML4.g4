@@ -6,8 +6,8 @@ type:
 	LPAREN type RPAREN											# ParenType
 	| BOOLTYPE													# BoolType
 	| INTTYPE													# IntType
-	| <assoc = right> paramType = type ARROW returnType = type	# FunType
-	| elementType = type LISTTYPE								# ListType;
+	| elementType = type LISTTYPE								# ListType
+	| <assoc = right> paramType = type ARROW returnType = type	# FunType;
 
 expr:
 	LPAREN expr RPAREN									# ParenExpr
