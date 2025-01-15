@@ -6,13 +6,13 @@
 		f = ()[fun x -> match x with [] -> 0 | a :: b -> a] |- f (4::[]) + f [] evalto 4 by E-Plus {
 			f = ()[fun x -> match x with [] -> 0 | a :: b -> a] |- f (4::[]) evalto 4 by E-App {
 				f = ()[fun x -> match x with [] -> 0 | a :: b -> a] |- f evalto ()[fun x -> match x with [] -> 0 | a :: b -> a] by E-Var {};
-				f = ()[fun x -> match x with [] -> 0 | a :: b -> a] |- 4::[] evalto 4::[] by E-Cons {
+				f = ()[fun x -> match x with [] -> 0 | a :: b -> a] |- 4::[] evalto 4 :: [] by E-Cons {
 					f = ()[fun x -> match x with [] -> 0 | a :: b -> a] |- 4 evalto 4 by E-Int {};
 					f = ()[fun x -> match x with [] -> 0 | a :: b -> a] |- [] evalto [] by E-Nil {}
 				};
-				x = 4::[] |- match x with [] -> 0 | a :: b -> a evalto 4 by E-MatchCons {
-					x = 4::[] |- x evalto 4::[] by E-Var {};
-					x = 4::[], a = 4, b = [] |- a evalto 4 by E-Var {}
+				x = 4 :: [] |- match x with [] -> 0 | a :: b -> a evalto 4 by E-MatchCons {
+					x = 4 :: [] |- x evalto 4 :: [] by E-Var {};
+					x = 4 :: [], a = 4, b = [] |- a evalto 4 by E-Var {}
 				}
 			};
 			f = ()[fun x -> match x with [] -> 0 | a :: b -> a] |- f [] evalto 0 by E-App {

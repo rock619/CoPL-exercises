@@ -11,7 +11,7 @@
 					s = ()[fun f -> fun g -> fun x -> f x (g x)], k = (s = ()[fun f -> fun g -> fun x -> f x (g x)])[fun x -> fun y -> x] |- s evalto ()[fun f -> fun g -> fun x -> f x (g x)] by E-Var2 {
 						s = ()[fun f -> fun g -> fun x -> f x (g x)] |- s evalto ()[fun f -> fun g -> fun x -> f x (g x)] by E-Var1 {}
 					};
-					s = ()[fun f -> fun g -> fun x -> f x (g x)], k = (s = ()[fun f -> fun g -> fun x -> f x (g x)])[fun x -> fun y -> x] |- k evalto (s = ()[fun f -> fun g -> fun x -> f x (g x)])[fun x -> fun y -> x]  by E-Var1 {};
+					s = ()[fun f -> fun g -> fun x -> f x (g x)], k = (s = ()[fun f -> fun g -> fun x -> f x (g x)])[fun x -> fun y -> x] |- k evalto (s = ()[fun f -> fun g -> fun x -> f x (g x)])[fun x -> fun y -> x] by E-Var1 {};
 					f = (s = ()[fun f -> fun g -> fun x -> f x (g x)])[fun x -> fun y -> x] |- fun g -> fun x -> f x (g x) evalto (f = (s = ()[fun f -> fun g -> fun x -> f x (g x)])[fun x -> fun y -> x])[fun g -> fun x -> f x (g x)] by E-Fun {}
 				};
 				s = ()[fun f -> fun g -> fun x -> f x (g x)], k = (s = ()[fun f -> fun g -> fun x -> f x (g x)])[fun x -> fun y -> x] |- k evalto (s = ()[fun f -> fun g -> fun x -> f x (g x)])[fun x -> fun y -> x] by E-Var1 {};
