@@ -470,9 +470,59 @@ func (v *Visitor) VisitLetExpr(c *parser.LetExprContext) interface{} {
 
 func (v *Visitor) VisitLetRecExpr(c *parser.LetRecExprContext) interface{} {
 	v.logExprContext(c)
+	v.l.Info("VisitLetExpr", "recFun", getLiteral(v.p, c.RecFun()), "body", getLiteral(v.p, c.GetBody()), "givenType", v.getType())
 
-	v.l.Error("VisitLetRecExpr: not implemented", "literal", getLiteral(v.p, c))
-	return nil
+	recFunType := &FunType{
+		ParamType:  v.env.NewTypeVar(),
+		ReturnType: v.env.NewTypeVar(),
+	}
+	expr := LetRecExpr{
+		BaseExpr: &BaseExpr{
+			env:     v.env.Clone(),
+			literal: getLiteral(v.p, c),
+			typ:     v.env.NewTypeVar(),
+		},
+		RecFun: RecFun{
+			Name: c.RecFun().GetFunName().GetText(),
+			Fun: Fun{
+				Param:       c.RecFun().Fun().GetParam().GetText(),
+				BodyLiteral: getLiteral(v.p, c.RecFun().Fun().GetBody()),
+				BodyCtx:     c.RecFun().Fun().GetBody(),
+			},
+		},
+	}
+	defer v.logExpr(expr, "VisitLetRecExpr: exit")()
+	v.l.Info("VisitLetRecExpr: add TypeVars", "recFunType", recFunType, "bodyType", expr.typ)
+	v.env.AddScope()
+	v.env.AddBind(expr.RecFun.Name, recFunType)
+	v.env.AddBind(expr.RecFun.Param, recFunType.ParamType)
+	reset := v.setType(recFunType.ReturnType)
+	funBody, ok := c.RecFun().Fun().GetBody().Accept(v).(Expr)
+	if !ok {
+		v.l.Error("VisitLetRecExpr: funBody is not Expr", "funBody", getLiteral(v.p, c.RecFun().Fun().GetBody()))
+		return nil
+	}
+	reset()
+	v.l.Info("VisitLetRecExpr: AddConstraint", "left", recFunType.ReturnType, "right", funBody.Type())
+	v.env.AddConstraint(recFunType.ReturnType, funBody.Type())
+	expr.RecFun.Body = funBody
+
+	v.env.RemoveScope()
+	v.env.AddScope()
+	defer v.env.RemoveScope()
+	v.env.AddBind(expr.RecFun.Name, recFunType)
+	bodyExpr, ok := c.GetBody().Accept(v).(Expr)
+	if !ok {
+		v.l.Error("VisitLetRecExpr: bodyExpr is not Expr", "bodyExpr", getLiteral(v.p, c.GetBody()))
+		return nil
+	}
+	expr.Body = bodyExpr
+	v.l.Info("VisitLetRecExpr: AddConstraint", "left", expr.typ, "right", bodyExpr.Type())
+	v.env.AddConstraint(expr.typ, bodyExpr.Type())
+
+	expr.rule = TLetRec
+	expr.AddChildren(funBody, bodyExpr)
+	return expr
 }
 
 func (v *Visitor) VisitIntExpr(c *parser.IntExprContext) interface{} {

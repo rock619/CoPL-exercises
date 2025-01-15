@@ -353,10 +353,16 @@ type ListType struct {
 func (*ListType) typ() {}
 
 func (t *ListType) String() string {
+	if _, ok := t.ElemType.(*FunType); ok {
+		return fmt.Sprintf("(%s) list", t.ElemType)
+	}
 	return fmt.Sprintf("%s list", t.ElemType)
 }
 
 func (t *ListType) Print() string {
+	if _, ok := t.ElemType.(*FunType); ok {
+		return fmt.Sprintf("(%s) list", t.ElemType.Print())
+	}
 	return fmt.Sprintf("%s list", t.ElemType.Print())
 }
 

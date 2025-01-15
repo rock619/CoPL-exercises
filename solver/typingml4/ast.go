@@ -142,6 +142,7 @@ type LetExpr struct {
 type LetRecExpr struct {
 	*BaseExpr
 	RecFun
+	Body Expr
 }
 
 type RecFun struct {

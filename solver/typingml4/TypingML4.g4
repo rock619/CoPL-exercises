@@ -21,7 +21,7 @@ expr:
 	| left = expr op = LT right = expr					# BinOpExpr
 	| IF cond = expr THEN then = expr ELSE else = expr	# IfExpr
 	| LET IDENTIFIER EQ bindExpr = expr IN body = expr	# LetExpr
-	| LET recFun IN expr								# LetRecExpr
+	| LET recFun IN body = expr							# LetRecExpr
 	| INT												# IntExpr
 	| BOOL												# BoolExpr
 	| IDENTIFIER										# VarExpr;

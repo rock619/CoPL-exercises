@@ -1259,6 +1259,7 @@ func (s *LetExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 type LetRecExprContext struct {
 	ExprContext
+	body IExprContext
 }
 
 func NewLetRecExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *LetRecExprContext {
@@ -1270,6 +1271,10 @@ func NewLetRecExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *Let
 
 	return p
 }
+
+func (s *LetRecExprContext) GetBody() IExprContext { return s.body }
+
+func (s *LetRecExprContext) SetBody(v IExprContext) { s.body = v }
 
 func (s *LetRecExprContext) GetRuleContext() antlr.RuleContext {
 	return s
@@ -2228,7 +2233,10 @@ func (p *TypingML4Parser) expr(_p int) (localctx IExprContext) {
 		}
 		{
 			p.SetState(77)
-			p.expr(4)
+
+			var _x = p.expr(4)
+
+			localctx.(*LetRecExprContext).body = _x
 		}
 
 	case 8:
