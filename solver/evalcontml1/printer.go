@@ -34,41 +34,26 @@ func (p *Printer) do(j Judgement, depth int) {
 	if depth == 0 {
 		fmt.Fprintf(p.w, "%s by %s {", p.input, j.By())
 	} else {
-		fmt.Fprint(p.w, prefix)
-		// fmt.Fprintf(p.w, "%s%s by %s {", prefix, p.input, e.Rule())
+		fmt.Fprintf(p.w, "%s%s {", prefix, j)
 	}
 
-	// literal := normalizeSpaces(e.Literal())
-	// if depth == 0 {
-	//
-	// } else {
-	// 	envStr := e.Env().Print(p.subs)
-	// 	if envStr != "" {
-	// 		envStr += " "
-	// 	}
-	// 	fmt.Fprintf(
-	// 		p.w,
-	// 		"%s%s|- %s : %s by %s {",
-	// 		prefix, envStr, literal, Substitute(e.Type(), p.subs).Print(), e.Rule(),
-	// 	)
-	// }
+	for i, v := range j.Premises() {
+		fmt.Fprintln(p.w)
+		p.do(v, depth+1)
+		if i == len(j.Premises())-1 {
+			fmt.Fprintln(p.w)
+		} else {
+			fmt.Fprint(p.w, ";")
+		}
+	}
 
-	// for i, c := range e.Children() {
-	// 	fmt.Fprintln(p.w)
-	// 	p.do(c, depth+1)
-	// 	if i == len(e.Children())-1 {
-	// 		fmt.Fprintln(p.w)
-	// 	} else {
-	// 		fmt.Fprint(p.w, ";")
-	// 	}
-	// }
-	// if len(e.Children()) == 0 {
-	// 	fmt.Fprint(p.w, "}")
-	// } else {
-	// 	fmt.Fprint(p.w, prefix+"}")
-	// }
+	if len(j.Premises()) == 0 {
+		fmt.Fprint(p.w, "}")
+	} else {
+		fmt.Fprint(p.w, prefix+"}")
+	}
 
-	// if depth == 0 {
-	// 	fmt.Fprintln(p.w)
-	// }
+	if depth == 0 {
+		fmt.Fprintln(p.w)
+	}
 }

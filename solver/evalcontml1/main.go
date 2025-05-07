@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
+	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/lmittmann/tint"
@@ -32,8 +34,9 @@ func Run(r io.Reader, w, errW io.Writer) error {
 		logger.Error("error", "error", err)
 	}
 	logger.Info("result", "result", result)
-	result.Derive()
-	logger.Info("result", "result", result)
+	result = Derive(result, logger)
+	logger.Info("result", "result", fmt.Sprintf("%#v", result))
+	NewPrinter(w, strings.TrimSpace(inputStream.String()), result, "\t", logger).Do()
 	return nil
 }
 

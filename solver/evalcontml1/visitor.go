@@ -40,21 +40,27 @@ func (v *Visitor) VisitEval(c *parser.EvalContext) any {
 	if expRes.Err() != nil {
 		return Err[Judgement](fmt.Errorf("VisitEval: %w", expRes.Err()))
 	}
-	contRes := AssertResult[Continuation](c.Cont().Accept(v))
-	if contRes.Err() != nil {
-		return Err[Judgement](fmt.Errorf("VisitEval: %w", contRes.Err()))
-	}
+
 	valRes := AssertResult[Value](c.Value().Accept(v))
 	if valRes.Err() != nil {
 		return Err[Judgement](fmt.Errorf("VisitEval: %w", valRes.Err()))
 	}
 
+	cont := Continuation(UnaryCont{})
+	if c.Cont() != nil {
+		contRes := AssertResult[Continuation](c.Cont().Accept(v))
+		if contRes.Err() != nil {
+			return Err[Judgement](fmt.Errorf("VisitEval: %w", contRes.Err()))
+		}
+		cont = contRes.Val()
+	}
+
 	result := ExpJudgement{
 		BaseJudgement: &BaseJudgement{
-			cont:   contRes.val,
-			evalTo: valRes.val,
+			cont:   cont,
+			evalTo: valRes.Val(),
 		},
-		Exp: expRes.val,
+		Exp: expRes.Val(),
 	}
 	return OK[Judgement](&result)
 }
@@ -67,6 +73,75 @@ func (v *Visitor) VisitIntExp(c *parser.IntExpContext) any {
 		return Err[Exp](fmt.Errorf("VisitIntExp: %w", err))
 	}
 	return OK[Exp](IntExp(i))
+}
+
+func (v *Visitor) VisitBoolExp(c *parser.BoolExpContext) any {
+	v.l.Debug("VisitBoolExp", "literal", v.LiteralOf(c))
+
+	b, err := strconv.ParseBool(c.BOOL().GetText())
+	if err != nil {
+		return Err[Exp](fmt.Errorf("VisitBoolExp: %w", err))
+	}
+	return OK[Exp](BoolExp(b))
+}
+
+func (v *Visitor) VisitBinOpExp(c *parser.BinOpExpContext) any {
+	v.l.Debug("VisitBinOpExp", "literal", v.LiteralOf(c))
+
+	leftRes := AssertResult[Exp](c.Exp(0).Accept(v))
+	if leftRes.Err() != nil {
+		return Err[Exp](fmt.Errorf("VisitBinOpExp: %w", leftRes.Err()))
+	}
+
+	rightRes := AssertResult[Exp](c.Exp(1).Accept(v))
+	if rightRes.Err() != nil {
+		return Err[Exp](fmt.Errorf("VisitBinOpExp: %w", rightRes.Err()))
+	}
+
+	op, err := NewOp(c.GetOp())
+	if err != nil {
+		return Err[Exp](fmt.Errorf("VisitBinOpExp: %w", err))
+	}
+
+	return OK[Exp](BinOpExp{
+		Left:  leftRes.Val(),
+		Right: rightRes.Val(),
+		Op:    op,
+	})
+}
+
+func (v *Visitor) VisitIfExp(c *parser.IfExpContext) any {
+	v.l.Debug("VisitIfExp", "literal", v.LiteralOf(c))
+
+	condRes := AssertResult[Exp](c.Exp(0).Accept(v))
+	if condRes.Err() != nil {
+		return Err[Exp](fmt.Errorf("VisitIfExp: %w", condRes.Err()))
+	}
+	thenRes := AssertResult[Exp](c.Exp(1).Accept(v))
+	if thenRes.Err() != nil {
+		return Err[Exp](fmt.Errorf("VisitIfExp: %w", thenRes.Err()))
+	}
+	elseRes := AssertResult[Exp](c.Exp(2).Accept(v))
+	if elseRes.Err() != nil {
+		return Err[Exp](fmt.Errorf("VisitIfExp: %w", elseRes.Err()))
+	}
+	return OK[Exp](IfExp{
+		Cond: condRes.Val(),
+		Then: thenRes.Val(),
+		Else: elseRes.Val(),
+	})
+}
+
+func (v *Visitor) VisitParenExp(c *parser.ParenExpContext) any {
+	v.l.Debug("VisitParenExp", "literal", v.LiteralOf(c))
+
+	innerRes := AssertResult[Exp](c.Exp().Accept(v))
+	if innerRes.Err() != nil {
+		return Err[Exp](fmt.Errorf("VisitParenExp: %w", innerRes.Err()))
+	}
+	return OK[Exp](ParenExp{
+		Inner: innerRes.Val(),
+	})
 }
 
 func (v *Visitor) VisitUnaryCont(c *parser.UnaryContContext) any {
@@ -90,7 +165,7 @@ func (v *Visitor) VisitValueCont(c *parser.ValueContContext) any {
 
 	if c.Cont() == nil {
 		return OK[Continuation](ValueCont{
-			Left: valRes.val,
+			Left: valRes.Val(),
 			Op:   op,
 		})
 	}
@@ -101,7 +176,7 @@ func (v *Visitor) VisitValueCont(c *parser.ValueContContext) any {
 	}
 
 	return OK[Continuation](ValueCont{
-		Left: valRes.val,
+		Left: valRes.Val(),
 	})
 }
 
@@ -126,7 +201,6 @@ func (v *Visitor) VisitBoolValue(c *parser.BoolValueContext) any {
 }
 
 func (v *Visitor) LiteralOf(st antlr.SyntaxTree) string {
-	// v.p.GetTokenStream().GetAllText()
 	text := v.p.BaseParser.GetTokenStream().GetTextFromInterval(st.GetSourceInterval())
 	return normalizeSpaces(text)
 }

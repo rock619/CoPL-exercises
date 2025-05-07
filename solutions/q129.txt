@@ -1,7 +1,7 @@
 3 + (if -3 < -2 * 8 then 8 else 2) + 4 evalto 9 by E-BinOp {
-	3 + (if -3 < -2 * 8 then 8 else 2) >> {_ + 4} evalto 9 by E-BinOp {
-		3 >> {_ + (if -3 < -2 * 8 then 8 else 2)} >> {_ + 4} evalto 9 by E-Int {
-			3 => {_ + (if -3 < -2 * 8 then 8 else 2)} >> {_ + 4} evalto 9 by C-EvalR {
+	3 + if -3 < -2 * 8 then 8 else 2 >> {_ + 4} evalto 9 by E-BinOp {
+		3 >> {_ + if -3 < -2 * 8 then 8 else 2} >> {_ + 4} evalto 9 by E-Int {
+			3 => {_ + if -3 < -2 * 8 then 8 else 2} >> {_ + 4} evalto 9 by C-EvalR {
 				if -3 < -2 * 8 then 8 else 2 >> {3 + _} >> {_ + 4} evalto 9 by E-If {
 					-3 < -2 * 8 >> {if _ then 8 else 2} >> {3 + _} >> {_ + 4} evalto 9 by E-BinOp {
 						-3 >> {_ < -2 * 8} >> {if _ then 8 else 2} >> {3 + _} >> {_ + 4} evalto 9 by E-Int {

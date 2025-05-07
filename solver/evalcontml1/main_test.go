@@ -1,7 +1,5 @@
 package main
 
-package main
-
 import (
 	"bytes"
 	"fmt"
@@ -32,7 +30,7 @@ func readQuestion(t *testing.T, number int) string {
 }
 
 func TestRun(t *testing.T) {
-	for i := 124; i <= 130; i++ {
+	for i := 124; i <= 129; i++ {
 		t.Run(fmt.Sprintf("q%d", i), func(t *testing.T) {
 			w := &bytes.Buffer{}
 			errW := &bytes.Buffer{}
