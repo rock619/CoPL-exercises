@@ -1,0 +1,4 @@
+|- let rec findneg = fun l -> match l with
+       [] -> false
+     | x :: l -> if x < 0 then true else findneg l
+   in findneg (1 :: 2 :: -3 :: 4 :: []) evalto true

@@ -88,12 +88,12 @@ func (v *Visitor) VisitBoolExp(c *parser.BoolExpContext) any {
 func (v *Visitor) VisitBinOpExp(c *parser.BinOpExpContext) any {
 	v.l.Debug("VisitBinOpExp", "literal", v.LiteralOf(c))
 
-	leftRes := AssertResult[Exp](c.Exp(0).Accept(v))
+	leftRes := AssertResult[Exp](c.GetLeft().Accept(v))
 	if leftRes.Err() != nil {
 		return Err[Exp](fmt.Errorf("VisitBinOpExp: %w", leftRes.Err()))
 	}
 
-	rightRes := AssertResult[Exp](c.Exp(1).Accept(v))
+	rightRes := AssertResult[Exp](c.GetRight().Accept(v))
 	if rightRes.Err() != nil {
 		return Err[Exp](fmt.Errorf("VisitBinOpExp: %w", rightRes.Err()))
 	}
@@ -113,15 +113,15 @@ func (v *Visitor) VisitBinOpExp(c *parser.BinOpExpContext) any {
 func (v *Visitor) VisitIfExp(c *parser.IfExpContext) any {
 	v.l.Debug("VisitIfExp", "literal", v.LiteralOf(c))
 
-	condRes := AssertResult[Exp](c.Exp(0).Accept(v))
+	condRes := AssertResult[Exp](c.GetCond().Accept(v))
 	if condRes.Err() != nil {
 		return Err[Exp](fmt.Errorf("VisitIfExp: %w", condRes.Err()))
 	}
-	thenRes := AssertResult[Exp](c.Exp(1).Accept(v))
+	thenRes := AssertResult[Exp](c.GetThen().Accept(v))
 	if thenRes.Err() != nil {
 		return Err[Exp](fmt.Errorf("VisitIfExp: %w", thenRes.Err()))
 	}
-	elseRes := AssertResult[Exp](c.Exp(2).Accept(v))
+	elseRes := AssertResult[Exp](c.GetElse_().Accept(v))
 	if elseRes.Err() != nil {
 		return Err[Exp](fmt.Errorf("VisitIfExp: %w", elseRes.Err()))
 	}
