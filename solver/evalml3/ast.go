@@ -230,8 +230,8 @@ func NewBoolValue(tok antlr.Token) (BoolValue, error) {
 	return BoolValue(b), nil
 }
 
-// FunValue (ℰ)[fun x -> e]
-// ℰ = Env, x = Param, e = Body
+// FunValue (𝓔)[fun x -> e]
+// 𝓔 = Env, x = Param, e = Body
 type FunValue struct {
 	Fun
 	Env Env
@@ -247,8 +247,8 @@ func (f FunValue) String() string {
 	return fmt.Sprintf("(%s)[fun %s -> %s]", strings.Join(binds, ", "), f.Param, f.Body.Literal())
 }
 
-// RecFunValue (ℰ)[rec fun x = y -> e]
-// ℰ = Env, x = Name, y = Param, e = Body
+// RecFunValue (𝓔)[rec fun x = y -> e]
+// 𝓔 = Env, x = Name, y = Param, e = Body
 type RecFunValue struct {
 	RecFun
 	Env Env
