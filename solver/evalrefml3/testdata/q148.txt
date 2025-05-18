@@ -1,0 +1,4 @@
+|- let x = ref 2 in let y = ref 3 in
+   let refx = ref x in let refy = ref y in
+   let z = !refx := !(!refy) in !x
+  evalto 3 / @l1 = 3, @l2 = 3, @l3 = @l1, @l4 = @l2

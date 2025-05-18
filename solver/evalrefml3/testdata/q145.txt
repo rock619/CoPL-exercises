@@ -1,0 +1,6 @@
+|- let c =
+     let x = ref 0 in
+     fun y -> if y then x := !x + 1 else !x in
+   let y = c true in
+   let y = c true in
+   c false evalto 2 / @l = 2

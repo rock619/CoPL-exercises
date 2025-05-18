@@ -1,0 +1,7 @@
+|- let rec do = fun f -> fun i ->
+     if i < 1 then 0
+     else let x = f i in do f (i - 1) in
+   let x = ref 0 in
+   let sum = fun i -> x := !x + i in
+   let y = do sum 3 in !x
+  evalto 6 / @l = 6

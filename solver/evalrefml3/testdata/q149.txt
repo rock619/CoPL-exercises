@@ -1,0 +1,5 @@
+|- let f = ref (fun x -> x) in
+   let fact = fun n -> if n < 1 then 1 else n * !f (n - 1) in
+   let z = f := fact in
+   fact 3
+  evalto 6 / @l1 = (f = @l1)[fun n -> if n < 1 then 1 else n * !f (n - 1)]
