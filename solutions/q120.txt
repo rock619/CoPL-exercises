@@ -1,0 +1,55 @@
+|- let rec map = fun f -> fun l ->
+     match l with [] -> [] | x :: y -> f x :: map f y in
+   map (fun x -> x < 3) (map (fun x -> x * 2) (4 :: 5 :: 1 :: [])) : bool list by T-LetRec {
+	map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f |- fun l -> match l with [] -> [] | x :: y -> f x :: map f y : 'e list -> 'f list by T-Abs {
+		map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f, l : 'e list |- match l with [] -> [] | x :: y -> f x :: map f y : 'f list by T-Match {
+			map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f, l : 'e list |- l : 'e list by T-Var {};
+			map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f, l : 'e list |- [] : 'f list by T-Nil {};
+			map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f, l : 'e list, x : 'e, y : 'e list |- f x :: map f y : 'f list by T-Cons {
+				map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f, l : 'e list, x : 'e, y : 'e list |- f x : 'f by T-App {
+					map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f, l : 'e list, x : 'e, y : 'e list |- f : 'e -> 'f by T-Var {};
+					map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f, l : 'e list, x : 'e, y : 'e list |- x : 'e by T-Var {}
+				};
+				map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f, l : 'e list, x : 'e, y : 'e list |- map f y : 'f list by T-App {
+					map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f, l : 'e list, x : 'e, y : 'e list |- map f : 'e list -> 'f list by T-App {
+						map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f, l : 'e list, x : 'e, y : 'e list |- map : ('e -> 'f) -> 'e list -> 'f list by T-Var {};
+						map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f, l : 'e list, x : 'e, y : 'e list |- f : 'e -> 'f by T-Var {}
+					};
+					map : ('e -> 'f) -> 'e list -> 'f list, f : 'e -> 'f, l : 'e list, x : 'e, y : 'e list |- y : 'e list by T-Var {}
+				}
+			}
+		}
+	};
+	map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- map (fun x -> x < 3) (map (fun x -> x * 2) (4 :: 5 :: 1 :: [])) : bool list by T-App {
+		map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- map (fun x -> x < 3) : int list -> bool list by T-App {
+			map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- map : (int -> bool) -> int list -> bool list by T-Var {};
+			map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- fun x -> x < 3 : int -> bool by T-Abs {
+				map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list, x : int |- x < 3 : bool by T-Lt {
+					map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list, x : int |- x : int by T-Var {};
+					map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list, x : int |- 3 : int by T-Int {}
+				}
+			}
+		};
+		map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- map (fun x -> x * 2) (4 :: 5 :: 1 :: []) : int list by T-App {
+			map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- map (fun x -> x * 2) : int list -> int list by T-App {
+				map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- map : (int -> int) -> int list -> int list by T-Var {};
+				map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- fun x -> x * 2 : int -> int by T-Abs {
+					map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list, x : int |- x * 2 : int by T-Mult {
+						map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list, x : int |- x : int by T-Var {};
+						map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list, x : int |- 2 : int by T-Int {}
+					}
+				}
+			};
+			map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- 4 :: 5 :: 1 :: [] : int list by T-Cons {
+				map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- 4 : int by T-Int {};
+				map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- 5 :: 1 :: [] : int list by T-Cons {
+					map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- 5 : int by T-Int {};
+					map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- 1 :: [] : int list by T-Cons {
+						map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- 1 : int by T-Int {};
+						map : 'e 'f . ('e -> 'f) -> 'e list -> 'f list |- [] : int list by T-Nil {}
+					}
+				}
+			}
+		}
+	}
+}

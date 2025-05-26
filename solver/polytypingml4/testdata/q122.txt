@@ -1,0 +1,4 @@
+|- let f = fun x ->
+             let g = fun y -> x :: [] in
+             if true then g 3 else g false in
+   match f 2 with [] -> f true | x :: y -> [] : bool list

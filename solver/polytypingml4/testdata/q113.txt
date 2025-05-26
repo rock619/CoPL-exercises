@@ -1,0 +1,4 @@
+|- let compose = fun f -> fun g -> fun x -> f (g x) in
+   let f = fun x -> if x then 3 else 4 in
+   let g = fun x -> x < 4 in
+   compose f (compose g f) true : int

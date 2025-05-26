@@ -1,0 +1,37 @@
+|- let f = fun x ->
+             let g = fun y -> y x :: [] in g (fun z -> 4) in
+   match f true with [] -> 3 :: [] | x :: y -> f x : int list by T-Let {
+	|- fun x -> let g = fun y -> y x :: [] in g (fun z -> 4) : 'f -> int list by T-Abs {
+		x : 'f |- let g = fun y -> y x :: [] in g (fun z -> 4) : int list by T-Let {
+			x : 'f |- fun y -> y x :: [] : ('f -> 'c) -> 'c list by T-Abs {
+				x : 'f, y : 'f -> 'c |- y x :: [] : 'c list by T-Cons {
+					x : 'f, y : 'f -> 'c |- y x : 'c by T-App {
+						x : 'f, y : 'f -> 'c |- y : 'f -> 'c by T-Var {};
+						x : 'f, y : 'f -> 'c |- x : 'f by T-Var {}
+					};
+					x : 'f, y : 'f -> 'c |- [] : 'c list by T-Nil {}
+				}
+			};
+			x : 'f, g : 'c . ('f -> 'c) -> 'c list |- g (fun z -> 4) : int list by T-App {
+				x : 'f, g : 'c . ('f -> 'c) -> 'c list |- g : ('f -> int) -> int list by T-Var {};
+				x : 'f, g : 'c . ('f -> 'c) -> 'c list |- fun z -> 4 : 'f -> int by T-Abs {
+					x : 'f, g : 'c . ('f -> 'c) -> 'c list, z : 'f |- 4 : int by T-Int {}
+				}
+			}
+		}
+	};
+	f : 'f . 'f -> int list |- match f true with [] -> 3 :: [] | x :: y -> f x : int list by T-Match {
+		f : 'f . 'f -> int list |- f true : int list by T-App {
+			f : 'f . 'f -> int list |- f : bool -> int list by T-Var {};
+			f : 'f . 'f -> int list |- true : bool by T-Bool {}
+		};
+		f : 'f . 'f -> int list |- 3 :: [] : int list by T-Cons {
+			f : 'f . 'f -> int list |- 3 : int by T-Int {};
+			f : 'f . 'f -> int list |- [] : int list by T-Nil {}
+		};
+		f : 'f . 'f -> int list, x : int, y : int list |- f x : int list by T-App {
+			f : 'f . 'f -> int list, x : int, y : int list |- f : int -> int list by T-Var {};
+			f : 'f . 'f -> int list, x : int, y : int list |- x : int by T-Var {}
+		}
+	}
+}

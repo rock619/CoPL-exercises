@@ -1,0 +1,3 @@
+|- let l = (fun x -> x) :: [] in
+   let l1 = (fun y -> y + 1) :: l in
+   (fun z -> if z then false else true) :: l : (bool -> bool) list
