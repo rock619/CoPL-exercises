@@ -1,10 +1,11 @@
-module github.com/rock619/CoPL-exercises/solver/evalrefml3
+module github.com/rock619/CoPL-exercises/solver
 
-go 1.24.2
+go 1.24.3
 
 require (
 	github.com/antlr4-go/antlr/v4 v4.13.1
-	github.com/lmittmann/tint v1.0.7
+	github.com/google/go-cmp v0.7.0
+	github.com/lmittmann/tint v1.1.1
 	github.com/mattn/go-isatty v0.0.20
 )
 
